@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="FlexTimeKeeperModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Logs">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userID" Type="int" Nullable="false" />
+          <Property Name="logType" Type="int" Nullable="false" />
+          <Property Name="logDirection" Type="int" />
+          <Property Name="logDate" Type="date" Nullable="false" />
+          <Property Name="logComment" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="LogTypeMapping">
+          <Key>
+            <PropertyRef Name="logTypeValue" />
+          </Key>
+          <Property Name="logTypeValue" Type="int" Nullable="false" />
+          <Property Name="logTypeName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TimeKeeper">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userID" Type="int" Nullable="false" />
+          <Property Name="flexTime" Type="float" />
+          <Property Name="vacationDays" Type="int" />
+          <Property Name="floatingHolidays" Type="int" />
+          <Property Name="sickDays" Type="int" />
+        </EntityType>
+        <EntityType Name="UserInfo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userName" Type="varchar" MaxLength="100" />
+          <Property Name="password" Type="varchar" MaxLength="255" />
+          <Property Name="firstName" Type="varchar" MaxLength="100" />
+          <Property Name="lastName" Type="varchar" MaxLength="100" />
+          <Property Name="companyID" Type="int" />
+        </EntityType>
+        <Association Name="FK_Logs_UserInfo">
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="1" />
+          <End Role="Logs" Type="Self.Logs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Logs">
+              <PropertyRef Name="userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TimeKeeper_UserInfo">
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="1" />
+          <End Role="TimeKeeper" Type="Self.TimeKeeper" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TimeKeeper">
+              <PropertyRef Name="userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FlexTimeKeeperModelStoreContainer">
+          <EntitySet Name="Logs" EntityType="Self.Logs" Schema="FTK_apiUser" store:Type="Tables" />
+          <EntitySet Name="LogTypeMapping" EntityType="Self.LogTypeMapping" Schema="FTK_apiUser" store:Type="Tables" />
+          <EntitySet Name="TimeKeeper" EntityType="Self.TimeKeeper" Schema="FTK_apiUser" store:Type="Tables" />
+          <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="FTK_apiUser" store:Type="Tables" />
+          <AssociationSet Name="FK_Logs_UserInfo" Association="Self.FK_Logs_UserInfo">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="Logs" EntitySet="Logs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TimeKeeper_UserInfo" Association="Self.FK_TimeKeeper_UserInfo">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="TimeKeeper" EntitySet="TimeKeeper" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FlexTimeKeeperModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userID" Type="Int32" Nullable="false" />
+          <Property Name="logType" Type="Int32" Nullable="false" />
+          <Property Name="logDirection" Type="Int32" />
+          <Property Name="logDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="logComment" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="UserInfo" Relationship="Self.FK_Logs_UserInfo" FromRole="Logs" ToRole="UserInfo" />
+        </EntityType>
+        <EntityType Name="LogTypeMapping">
+          <Key>
+            <PropertyRef Name="logTypeValue" />
+          </Key>
+          <Property Name="logTypeValue" Type="Int32" Nullable="false" />
+          <Property Name="logTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TimeKeeper">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userID" Type="Int32" Nullable="false" />
+          <Property Name="flexTime" Type="Double" />
+          <Property Name="vacationDays" Type="Int32" />
+          <Property Name="floatingHolidays" Type="Int32" />
+          <Property Name="sickDays" Type="Int32" />
+          <NavigationProperty Name="UserInfo" Relationship="Self.FK_TimeKeeper_UserInfo" FromRole="TimeKeeper" ToRole="UserInfo" />
+        </EntityType>
+        <EntityType Name="UserInfo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="firstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="lastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="companyID" Type="Int32" />
+          <NavigationProperty Name="Logs" Relationship="Self.FK_Logs_UserInfo" FromRole="UserInfo" ToRole="Logs" />
+          <NavigationProperty Name="TimeKeepers" Relationship="Self.FK_TimeKeeper_UserInfo" FromRole="UserInfo" ToRole="TimeKeeper" />
+        </EntityType>
+        <Association Name="FK_Logs_UserInfo">
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="1" />
+          <End Role="Logs" Type="Self.Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Logs">
+              <PropertyRef Name="userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TimeKeeper_UserInfo">
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="1" />
+          <End Role="TimeKeeper" Type="Self.TimeKeeper" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TimeKeeper">
+              <PropertyRef Name="userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FlexTimeKeeperEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Logs" EntityType="Self.Log" />
+          <EntitySet Name="LogTypeMappings" EntityType="Self.LogTypeMapping" />
+          <EntitySet Name="TimeKeepers" EntityType="Self.TimeKeeper" />
+          <EntitySet Name="UserInfoes" EntityType="Self.UserInfo" />
+          <AssociationSet Name="FK_Logs_UserInfo" Association="Self.FK_Logs_UserInfo">
+            <End Role="UserInfo" EntitySet="UserInfoes" />
+            <End Role="Logs" EntitySet="Logs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TimeKeeper_UserInfo" Association="Self.FK_TimeKeeper_UserInfo">
+            <End Role="UserInfo" EntitySet="UserInfoes" />
+            <End Role="TimeKeeper" EntitySet="TimeKeepers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FlexTimeKeeperModelStoreContainer" CdmEntityContainer="FlexTimeKeeperEntities">
+          <EntitySetMapping Name="Logs">
+            <EntityTypeMapping TypeName="FlexTimeKeeperModel.Log">
+              <MappingFragment StoreEntitySet="Logs">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="userID" ColumnName="userID" />
+                <ScalarProperty Name="logType" ColumnName="logType" />
+                <ScalarProperty Name="logDirection" ColumnName="logDirection" />
+                <ScalarProperty Name="logDate" ColumnName="logDate" />
+                <ScalarProperty Name="logComment" ColumnName="logComment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LogTypeMappings">
+            <EntityTypeMapping TypeName="FlexTimeKeeperModel.LogTypeMapping">
+              <MappingFragment StoreEntitySet="LogTypeMapping">
+                <ScalarProperty Name="logTypeValue" ColumnName="logTypeValue" />
+                <ScalarProperty Name="logTypeName" ColumnName="logTypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TimeKeepers">
+            <EntityTypeMapping TypeName="FlexTimeKeeperModel.TimeKeeper">
+              <MappingFragment StoreEntitySet="TimeKeeper">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="userID" ColumnName="userID" />
+                <ScalarProperty Name="flexTime" ColumnName="flexTime" />
+                <ScalarProperty Name="vacationDays" ColumnName="vacationDays" />
+                <ScalarProperty Name="floatingHolidays" ColumnName="floatingHolidays" />
+                <ScalarProperty Name="sickDays" ColumnName="sickDays" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserInfoes">
+            <EntityTypeMapping TypeName="FlexTimeKeeperModel.UserInfo">
+              <MappingFragment StoreEntitySet="UserInfo">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="userName" ColumnName="userName" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="companyID" ColumnName="companyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
